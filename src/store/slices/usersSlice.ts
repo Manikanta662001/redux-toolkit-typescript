@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { resetCount } from "./counterSlice";
 export interface UsersSliceState {
   data: any[];
   errorMessage: string;
@@ -15,7 +16,7 @@ export const fetchUsers = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await fetch(
-        "https://jsonplaceholder.typicode.com/users"
+        "https://jsonplaceholder.typicode.com/users",
       );
       if (!response.ok) {
         throw new Error("There is some Error While Fetching");
@@ -25,7 +26,7 @@ export const fetchUsers = createAsyncThunk(
     } catch (error: any) {
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 const counterSlice = createSlice({
@@ -46,6 +47,9 @@ const counterSlice = createSlice({
         isLoading: false,
         errorMessage: action.payload as string,
       };
+    });
+    builder.addCase(resetCount, (state) => {
+      return { ...state, data: [], errorMessage: "" };
     });
   },
 });
